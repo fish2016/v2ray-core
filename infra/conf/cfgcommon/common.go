@@ -7,6 +7,7 @@ import (
 
 	"github.com/v2fly/v2ray-core/v5/common/net"
 	"github.com/v2fly/v2ray-core/v5/common/protocol"
+	"fmt"
 )
 
 //go:generate go run github.com/v2fly/v2ray-core/v5/common/errors/errorgen
@@ -41,6 +42,12 @@ func (v *StringList) UnmarshalJSON(data []byte) error {
 type Address struct {
 	net.Address
 }
+
+func (v *Address) MarshalJSON() ([]byte, error) {
+
+	return []byte(fmt.Sprintf("\"%s\"", v.String())), nil
+}
+
 
 func (v *Address) UnmarshalJSON(data []byte) error {
 	var rawStr string
@@ -152,6 +159,13 @@ func (v *PortRange) Build() *net.PortRange {
 		To:   v.To,
 	}
 }
+
+
+func (v *PortRange) MarshalJSON() ([]byte, error) {
+
+	return []byte(fmt.Sprintf("%d", v.From)), nil
+}
+
 
 // UnmarshalJSON implements encoding/json.Unmarshaler.UnmarshalJSON
 func (v *PortRange) UnmarshalJSON(data []byte) error {
